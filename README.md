@@ -2,14 +2,22 @@
 
 > A GitHub App built with [Probot](https://github.com/probot/probot) for team workflow made with Probot
 
-## Setup
+# Configuration file
 
-```sh
-# Install dependencies
-npm install
+Create a directory `.github` in the root of your repo (if it doesn't exist) and add a file named `eskworkflow.yaml`.  
 
-# Run the bot
-npm start
+## Add automatic tags for new issues on the repo
+
+Example:
+
+```yaml
+auto_add_labels: 
+  - name: "Esk tag"
+    color: "aa3a4a"
+  - name: "Test tagging"
+    color: "123a4a"
+  - name: "Tada! :tada:"
+    color: "884599"
 ```
 
 ## Contributing
