@@ -20,6 +20,8 @@ auto_add_labels:
     color: "884599"
 ```
 
+![Auto tagging](resources/img/auto-tags.png)
+
 ## Contributing
 
 If you have suggestions for how workflowbot could be improved, or want to report a bug, open an issue! We'd love all and any contributions.
