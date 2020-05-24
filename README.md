@@ -24,19 +24,24 @@ auto_add_labels:
 
 # WIP: Automatic workflow on a project
 
+Creating a repository project with the name that you specified on the config file, will automatically set columns and add/move issues to the column with the specified tag.
+
 ```yaml
 repo_project_workflow:
   - name: "My project"
   - columns:
     - column:
-      - name: "open"
+      - name: "New issues"
       - tags: "New issue"
     - column:
-      - name: "assigned"
-      - tags: "Assigned"
+      - name: "To do"
+      - tags: "To do"
     - column:
-      - name: "closed"
-      - tags: "Closed"
+      - name: "In progress"
+      - tags: "In progress"
+    - column:
+      - name: "Done"
+      - tags: "Done"
 ```
 
 ## Contributing
