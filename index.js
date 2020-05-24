@@ -86,27 +86,6 @@ module.exports = app => {
                 issue_number: tempParams.number,
               })
 
-              // Delete the card from the project
-              // for (const project of repoOpenProjects) {
-              //   if (project.name === config.repo_project_workflow[0].name) {
-              //     const projectColumns = await getProjectColumns(context, project)
-              //     for (const col of projectColumns) {
-              //       const columnCards = await getColumnCards(context, col)
-              //       for (card of columnCards) {
-              //         // app.log(card)
-              //         if (card.content_url == context.payload.issue.url){
-
-              //           await context.github.projects.moveCard({
-              //             card_id: card.id,
-              //             position: "top",
-              //             column_id: col.id
-              //           })
-              //         }
-              //       }
-              //     }
-              //   }
-              // }
-
             }
           }
         }
@@ -116,7 +95,12 @@ module.exports = app => {
     // Handle workflow based on tagging
     for (const project of repoOpenProjects) {
       if (project.name === config.repo_project_workflow[0].name) {
-        moveIssuesToColumn(context, project, tempParams.owner, tempParams.repo)
+        for (const column of config.repo_project_workflow[1].columns) {
+          // Check if issue label belongs to a column, and move it there
+          if (column.column[1].label == setLabel.name) {
+            moveOrCreateCard(context, project, context.payload.issue, column)
+          }
+        }
       }
     }
   })
@@ -175,51 +159,49 @@ module.exports = app => {
         for (const column of config.repo_project_workflow[1].columns) {
           // Check if issue label belongs to a column, and move it there
           if (column.column[1].label == label.name) {
-            app.log("Move issue " + issue.title + " to " + column.column[0].name)
-
-            // Check if card exists
-
-            var cardExists = null
-            const projectColumns = await getProjectColumns(context, project)
-            for (const col of projectColumns) {
-              const columnCards = await getColumnCards(context, col)
-              for (card of columnCards) {
-                if (card.content_url == context.payload.issue.url){
-                  // await context.github.projects.moveCard({
-                  //   card_id: card.id,
-                  //   position: "top",
-                  //   column_id: col.id
-                  // })
-                  cardExists = card
-                }
-              }
-            }
-
-            for (const col of projectColumns) {
-              if (col.name === column.column[0].name) {
-                if (cardExists == null) {
-                  await context.github.projects.createCard({
-                    column_id: col.id,
-                    content_id: issue.id,
-                    content_type: "Issue",
-                  })
-                } else {
-                  await context.github.projects.moveCard({
-                    card_id: card.id,
-                    position: "bottom",
-                    column_id: col.id
-                  })
-                }
-                
-                break
-              }
-            }
-
-
-            
+            moveOrCreateCard(context, project, issue, column)
           }
         }
       } 
+    }
+  }
+
+  async function moveOrCreateCard(context, project, issue, column) {
+    // Check if card exists
+    var foundCard = null
+    const projectColumns = await getProjectColumns(context, project)
+    for (const col of projectColumns) {
+      const columnCards = await getColumnCards(context, col)
+      for (card of columnCards) {
+        if (card.content_url == issue.url){
+          foundCard = card
+          break
+        }
+      }
+      if (foundCard != null) {
+        break
+      }
+    }
+
+    for (const col of projectColumns) {
+      if (col.name === column.column[0].name) {
+        if (foundCard == null) {
+          app.log("Create issue " + issue.title + " in " + column.column[0].name)
+          await context.github.projects.createCard({
+            column_id: col.id,
+            content_id: issue.id,
+            content_type: "Issue",
+          })
+        } else {
+          app.log("Move issue " + issue.title + " to " + column.column[0].name)
+          await context.github.projects.moveCard({
+            card_id: card.id,
+            position: "bottom",
+            column_id: col.id
+          })
+        }
+        break
+      }
     }
   }
 
