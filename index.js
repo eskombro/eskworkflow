@@ -6,9 +6,31 @@
 
 module.exports = app => {
   
-  app.log('Yay, the app was loaded!')
+  app.log('Wow, amazing, eskworkflow was loaded!')
 
-  
+  app.on('project.created', async context => {
+    const config = await context.config("eskworkflow.yaml");
+    const tempParams = context.payload.project
+    if (config.repo_project_workflow !== undefined){
+      app.log("CONFIG", config.repo_project_workflow)
+      projectName = config.repo_project_workflow[0].name
+      if (projectName == tempParams.name) {
+        config.repo_project_workflow[1].columns.forEach(column => {
+          context.github.projects.createColumn({
+            project_id: tempParams.id,
+            name: column.column[0].name,
+          })
+        })
+      }
+    }
+  })
+
+  app.on('issues.labeled', async context => {
+    const config = await context.config("eskworkflow.yaml");
+    const tempParams = context.issue()
+    // Handle workflow based on tagging
+ 
+  })
 
   app.on('issues.opened', async context => {
 

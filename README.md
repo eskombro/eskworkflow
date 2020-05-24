@@ -22,6 +22,23 @@ auto_add_labels:
 
 ![Auto tagging](resources/img/auto-tags.png)
 
+# WIP: Automatic workflow on a project
+
+```yaml
+repo_project_workflow:
+  - name: "My project"
+  - columns:
+    - column:
+      - name: "open"
+      - tags: "New issue"
+    - column:
+      - name: "assigned"
+      - tags: "Assigned"
+    - column:
+      - name: "closed"
+      - tags: "Closed"
+```
+
 ## Contributing
 
 If you have suggestions for how workflowbot could be improved, or want to report a bug, open an issue! We'd love all and any contributions.
