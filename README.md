@@ -12,15 +12,13 @@ Example:
 
 ```yaml
 auto_add_labels: 
-  - name: "Esk tag"
+  - name: "New issue"
     color: "aa3a4a"
-  - name: "Test tagging"
-    color: "123a4a"
   - name: "Tada! :tada:"
     color: "884599"
 ```
 
-![Auto tagging](resources/img/auto-tags.png)
+![Auto tagging](resources/img/AutoTagging.png)
 
 # WIP: Automatic workflow on a project
 
@@ -28,21 +26,29 @@ Creating a repository project with the name that you specified on the config fil
 
 ```yaml
 repo_project_workflow:
-  - name: "My project"
+  - name: "Some project"
   - columns:
     - column:
-      - name: "New issues"
-      - tags: "New issue"
+      - name: "New issue"
+      - label: "New issue"
     - column:
       - name: "To do"
-      - tags: "To do"
+      - label: "To do"
     - column:
       - name: "In progress"
-      - tags: "In progress"
+      - label: "In progress"
     - column:
       - name: "Done"
-      - tags: "Done"
+      - label: "Done"
 ```
+
+## Project example
+
+![Board](resources/img/Board.png)
+
+## Issue labeling and automatic workflow
+
+![Board](resources/img/LabelWorkflow.png)
 
 ## Contributing
 
