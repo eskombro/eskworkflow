@@ -13,9 +13,9 @@ Example:
 ```yaml
 auto_add_labels: 
   - name: "New issue"
-    color: "aa3a4a"
+    color: "336699"
   - name: "Tada! :tada:"
-    color: "884599"
+    color: "663399"
 ```
 
 ![Auto tagging](resources/img/AutoTagging.png)
@@ -30,16 +30,26 @@ repo_project_workflow:
   - columns:
     - column:
       - name: "New issue"
-      - label: "New issue"
+      - labels:
+        - name: "New issue"
+          color: "336699"
     - column:
       - name: "To do"
-      - label: "To do"
+      - labels:
+        - name: "To do"
+          color: "669933"
+        - name: "Reopened issue"
+          color: "339966"
     - column:
       - name: "In progress"
-      - label: "In progress"
+      - labels:
+        - name: "In progress"
+          color: "996633"
     - column:
       - name: "Done"
-      - label: "Done"
+      - labels:
+        - name: "Done"
+          color: "993366"
 ```
 
 ## Project example
