@@ -27,12 +27,9 @@ module.exports = app => {
 
     // Create labels if missing
     const repoLabels = await repoLib.getRepoLabels(context, owner, repo)
-    var workflowLabels = []
-    
-    for (const column of config.repo_project_workflow[1].columns) {
-      for (label of column.column[1].labels){
-        repoLib.addLabelIfNotExists(context, repoLabels, label, owner, repo)
-      }
+    var workflowLabels = await projectLib.getProjectWorkflowLabels(context)
+    for (label of workflowLabels){
+      repoLib.addLabelIfNotExists(context, repoLabels, label, owner, repo)
     }
 
     // Create columns
@@ -64,18 +61,21 @@ module.exports = app => {
     const setLabel = context.payload.label
     var foundLabel = null
     var workflowLabels = await projectLib.getProjectWorkflowLabels(context)
-    if (workflowLabels.includes(context.payload.label.name)) {
-      for (labelName of workflowLabels) {
-        if (labelName != setLabel.name) {
+    const isWorkflowLabel = workflowLabels.filter(
+      function(label){ return setLabel.name == label.name }
+    );
+    if (isWorkflowLabel.length != 0) {
+      for (configLabel of workflowLabels) {
+        if (configLabel.name != setLabel.name) {
           const exists = context.payload.issue.labels.filter(
-            function(label){ return label.name == labelName }
+            function(label){ return label.name == configLabel.name }
           );
           if (exists.length != 0) {
             // Delete the label that is already there
             await context.github.issues.removeLabel({
               owner: tempParams.owner,
               repo: tempParams.repo,
-              name: labelName,
+              name: configLabel.name,
               issue_number: tempParams.number,
             })
           }
@@ -99,7 +99,7 @@ module.exports = app => {
   })
 
   app.on('issues.unlabeled', async context => {
-
+    // TODO: Remove card from board if is a config Label
   })
 
   app.on('issues.opened', async context => {

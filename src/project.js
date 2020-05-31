@@ -29,7 +29,7 @@ async function getProjectWorkflowLabels (context) {
     var workflowLabels = []
     for (const column of config.repo_project_workflow[1].columns) {
       for (label of column.column[1].labels){
-        workflowLabels.push(label.name)
+        workflowLabels.push(label)
       }
     }
     return workflowLabels
